@@ -1,0 +1,404 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agriculture Crop Advisory System</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f7f4ed;
+            color: #26352b;
+        }
+
+        header {
+            background: #234d32;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        header p {
+            font-size: 13px;
+        }
+
+        .box {
+            width: 650px;
+            max-width: 90%;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #0002;
+        }
+
+        h2 {
+            color: #234d32;
+            border-bottom: 2px solid #edf5ed;
+            padding-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #cbd8cc;
+            border-radius: 7px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 12px;
+            background: #3f7d4c;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #234d32;
+        }
+
+        .result {
+            background: #edf5ed;
+            border-left: 5px solid #3f7d4c;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 7px;
+        }
+
+        .result h3 {
+            color: #234d32;
+            margin-top: 0;
+        }
+
+        .score {
+            float: right;
+            background: #3f7d4c;
+            color: white;
+            padding: 4px 9px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .note {
+            background: #fff4cc;
+            padding: 10px;
+            border-radius: 7px;
+            font-size: 13px;
+        }
+
+        #results {
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            color: #777;
+            font-size: 12px;
+            margin: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🌾 Agriculture Crop Advisory System</h1>
+    <p>Software Engineering Mini Project | Rule-Based Crop Recommendation</p>
+</header>
+
+<div class="box">
+
+    <h2>🌱 Enter Field Details</h2>
+
+    <label>Soil Type</label>
+    <select id="soil">
+        <option value="">-- Select Soil Type --</option>
+        <option value="alluvial">Alluvial Soil</option>
+        <option value="black">Black Soil</option>
+        <option value="red">Red Soil</option>
+        <option value="laterite">Laterite Soil</option>
+        <option value="sandy">Sandy Soil</option>
+        <option value="clayey">Clayey Soil</option>
+    </select>
+
+    <label>Growing Season</label>
+    <select id="season">
+        <option value="">-- Select Season --</option>
+        <option value="kharif">Kharif</option>
+        <option value="rabi">Rabi</option>
+        <option value="zaid">Zaid</option>
+    </select>
+
+    <label>Average Rainfall (mm/year)</label>
+    <input type="number" id="rainfall" placeholder="Example: 800">
+
+    <label>Average Temperature (°C)</label>
+    <input type="number" id="temperature" placeholder="Example: 28">
+
+    <label>Irrigation Availability</label>
+    <select id="irrigation">
+        <option value="">-- Select Availability --</option>
+        <option value="good">Good</option>
+        <option value="moderate">Moderate</option>
+        <option value="poor">Poor</option>
+    </select>
+
+    <button onclick="recommendCrop()">🌱 Get Crop Advisory</button>
+
+</div>
+
+
+<div class="box" id="results">
+
+    <h2>🌾 Recommended Crops</h2>
+
+    <div id="cropList"></div>
+
+    <div class="note">
+        <b>Note:</b> This is a simple rule-based prototype made
+        for a college mini-project.
+    </div>
+
+</div>
+
+
+<script>
+
+function recommendCrop() {
+
+    var soil = document.getElementById("soil").value;
+    var season = document.getElementById("season").value;
+    var rainfall = Number(document.getElementById("rainfall").value);
+    var temperature = Number(document.getElementById("temperature").value);
+    var irrigation = document.getElementById("irrigation").value;
+
+    if (soil == "" || season == "" || rainfall == "" ||
+        temperature == "" || irrigation == "") {
+        alert("Please enter all field details.");
+        return;
+    }
+
+    var crops = [];
+
+    /* Rice */
+    var score = 0;
+
+    if ((soil == "alluvial" || soil == "clayey") &&
+        season == "kharif")
+        score++;
+
+    if (rainfall >= 800 && rainfall <= 2700)
+        score++;
+
+    if (temperature >= 17 && temperature <= 38)
+        score++;
+
+    if (irrigation == "good" || irrigation == "moderate")
+        score++;
+
+    if (score >= 3)
+        crops.push(["Rice (Paddy)", score,
+        "Suitable for Kharif season.",
+        "Needs good water supply.",
+        "Suitable for alluvial and clayey soil."]);
+
+
+    /* Wheat */
+    score = 0;
+
+    if ((soil == "alluvial" || soil == "black") &&
+        season == "rabi")
+        score++;
+
+    if (rainfall >= 100 && rainfall <= 1100)
+        score++;
+
+    if (temperature >= 7 && temperature <= 28)
+        score++;
+
+    if (irrigation == "good" || irrigation == "moderate")
+        score++;
+
+    if (score >= 3)
+        crops.push(["Wheat", score,
+        "Suitable for Rabi season.",
+        "Grows well in cool weather.",
+        "Alluvial and black soil are suitable."]);
+
+
+    /* Cotton */
+    score = 0;
+
+    if ((soil == "black" || soil == "alluvial") &&
+        season == "kharif")
+        score++;
+
+    if (rainfall >= 400 && rainfall <= 1400)
+        score++;
+
+    if (temperature >= 18 && temperature <= 38)
+        score++;
+
+    if (irrigation == "good" || irrigation == "moderate")
+        score++;
+
+    if (score >= 3)
+        crops.push(["Cotton", score,
+        "Suitable for Kharif season.",
+        "Black soil is suitable.",
+        "Avoid excess water."]);
+
+
+    /* Groundnut */
+    score = 0;
+
+    if ((soil == "sandy" || soil == "red") &&
+        (season == "kharif" || season == "zaid"))
+        score++;
+
+    if (rainfall >= 300 && rainfall <= 1200)
+        score++;
+
+    if (temperature >= 18 && temperature <= 33)
+        score++;
+
+    if (irrigation == "moderate" || irrigation == "poor")
+        score++;
+
+    if (score >= 3)
+        crops.push(["Groundnut", score,
+        "Suitable for sandy and red soil.",
+        "Requires moderate rainfall.",
+        "Good drainage is useful."]);
+
+
+    /* Millets */
+    score = 0;
+
+    if ((soil == "red" || soil == "sandy" ||
+         soil == "black") && season == "kharif")
+        score++;
+
+    if (rainfall >= 100 && rainfall <= 900)
+        score++;
+
+    if (temperature >= 22 && temperature <= 43)
+        score++;
+
+    if (irrigation == "poor" || irrigation == "moderate")
+        score++;
+
+    if (score >= 3)
+        crops.push(["Millets (Bajra/Jowar)", score,
+        "Suitable for low rainfall areas.",
+        "Requires less irrigation.",
+        "Suitable for Kharif season."]);
+
+
+    /* Chickpea */
+    score = 0;
+
+    if ((soil == "black" || soil == "alluvial" ||
+         soil == "red") && season == "rabi")
+        score++;
+
+    if (rainfall >= 200 && rainfall <= 1000)
+        score++;
+
+    if (temperature >= 8 && temperature <= 28)
+        score++;
+
+    if (irrigation == "poor" || irrigation == "moderate")
+        score++;
+
+    if (score >= 3)
+        crops.push(["Chickpea (Gram)", score,
+        "Suitable for Rabi season.",
+        "Does not need excess water.",
+        "Grows well in black soil."]);
+
+
+    /* Mustard */
+    score = 0;
+
+    if ((soil == "alluvial" || soil == "sandy") &&
+        season == "rabi")
+        score++;
+
+    if (rainfall >= 100 && rainfall <= 850)
+        score++;
+
+    if (temperature >= 8 && temperature <= 28)
+        score++;
+
+    if (irrigation == "poor" || irrigation == "moderate")
+        score++;
+
+    if (score >= 3)
+        crops.push(["Mustard", score,
+        "Suitable for Rabi season.",
+        "Needs only light irrigation.",
+        "Suitable for sandy soil."]);
+
+
+    var list = document.getElementById("cropList");
+    list.innerHTML = "";
+
+    if (crops.length == 0) {
+
+        list.innerHTML =
+        "<p>No suitable crop found for these conditions. " +
+        "Try different field details.</p>";
+
+    } else {
+
+        for (var i = 0; i < crops.length; i++) {
+
+            var percent = crops[i][1] * 25;
+
+            list.innerHTML +=
+            "<div class='result'>" +
+            "<span class='score'>" + percent + "% Match</span>" +
+            "<h3>🌱 " + crops[i][0] + "</h3>" +
+            "<p>• " + crops[i][2] + "</p>" +
+            "<p>• " + crops[i][3] + "</p>" +
+            "<p>• " + crops[i][4] + "</p>" +
+            "</div>";
+        }
+    }
+
+    document.getElementById("results").style.display = "block";
+
+    document.getElementById("results").scrollIntoView({
+        behavior: "smooth"
+    });
+}
+
+</script>
+
+<footer>
+    Prototype for Software Engineering Practical
+</footer>
+
+</body>
+</html>
+```
